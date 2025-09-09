@@ -1,57 +1,19 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Wallet, CheckCircle, AlertCircle } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { Wallet, CheckCircle } from "lucide-react";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount, useDisconnect } from 'wagmi';
 
 interface WalletConnectProps {
   onConnectionChange: (connected: boolean, address?: string) => void;
 }
 
 export const WalletConnect = ({ onConnectionChange }: WalletConnectProps) => {
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState<string>("");
+  const { address, isConnected } = useAccount();
 
-  const connectWallet = async () => {
-    if (isConnected) {
-      // Disconnect
-      setIsConnected(false);
-      setWalletAddress("");
-      onConnectionChange(false);
-      toast({
-        title: "Wallet Disconnected",
-        description: "Your wallet has been disconnected.",
-      });
-      return;
-    }
-
-    setIsConnecting(true);
-    
-    try {
-      // Mock wallet connection for demo
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Simulate wallet connection
-      const mockAddress = "0x742d35Cc61C09F4f8A5D7a0fC04B5F4E3e2B8e4A";
-      setWalletAddress(mockAddress);
-      setIsConnected(true);
-      onConnectionChange(true, mockAddress);
-      
-      toast({
-        title: "Wallet Connected",
-        description: `Connected to ${mockAddress.slice(0, 6)}...${mockAddress.slice(-4)}`,
-      });
-    } catch (error) {
-      toast({
-        title: "Connection Failed",
-        description: "Failed to connect wallet. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsConnecting(false);
-    }
-  };
+  useEffect(() => {
+    onConnectionChange(isConnected, address);
+  }, [isConnected, address, onConnectionChange]);
 
   const formatAddress = (address: string) => 
     `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -69,8 +31,8 @@ export const WalletConnect = ({ onConnectionChange }: WalletConnectProps) => {
                 {isConnected ? "Wallet Connected" : "Connect Wallet"}
               </h3>
               <p className="text-sm text-muted-foreground">
-                {isConnected 
-                  ? formatAddress(walletAddress)
+                {isConnected && address
+                  ? formatAddress(address)
                   : "Connect your wallet to start staking"
                 }
               </p>
@@ -81,27 +43,58 @@ export const WalletConnect = ({ onConnectionChange }: WalletConnectProps) => {
             {isConnected && (
               <CheckCircle className="h-5 w-5 text-success" />
             )}
-            <Button
-              onClick={connectWallet}
-              disabled={isConnecting}
-              variant={isConnected ? "secondary" : "primary"}
-              className={
-                isConnected 
-                  ? "bg-secondary hover:bg-secondary/80"
-                  : "bg-gradient-primary hover:opacity-90 shadow-glow-primary"
-              }
-            >
-              {isConnecting ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-foreground mr-2" />
-                  Connecting...
-                </>
-              ) : isConnected ? (
-                "Disconnect"
-              ) : (
-                "Connect Wallet"
-              )}
-            </Button>
+            <ConnectButton.Custom>
+              {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
+                const ready = mounted;
+                const connected = ready && account && chain;
+
+                return (
+                  <div
+                    {...(!ready && {
+                      'aria-hidden': true,
+                      'style': {
+                        opacity: 0,
+                        pointerEvents: 'none',
+                        userSelect: 'none',
+                      },
+                    })}
+                  >
+                    {(() => {
+                      if (!connected) {
+                        return (
+                          <button
+                            onClick={openConnectModal}
+                            className="bg-gradient-primary hover:opacity-90 shadow-glow-primary text-primary-foreground px-4 py-2 rounded-md font-medium transition-smooth"
+                          >
+                            Connect Wallet
+                          </button>
+                        );
+                      }
+
+                      if (chain.unsupported) {
+                        return (
+                          <button
+                            onClick={openChainModal}
+                            className="bg-destructive hover:bg-destructive/80 text-destructive-foreground px-4 py-2 rounded-md font-medium transition-smooth"
+                          >
+                            Wrong Network
+                          </button>
+                        );
+                      }
+
+                      return (
+                        <button
+                          onClick={openAccountModal}
+                          className="bg-secondary hover:bg-secondary/80 text-secondary-foreground px-4 py-2 rounded-md font-medium transition-smooth"
+                        >
+                          {account.displayName}
+                        </button>
+                      );
+                    })()}
+                  </div>
+                );
+              }}
+            </ConnectButton.Custom>
           </div>
         </div>
       </CardContent>
