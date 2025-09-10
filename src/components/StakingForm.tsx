@@ -20,6 +20,8 @@ export const StakingForm = ({ isConnected, tokenBalance, onStake }: StakingFormP
   const [isApproving, setIsApproving] = useState(false);
   const { address } = useAccount();
   
+  // Force browser refresh to clear cache
+  
   const { approveToken, stake, isPending, isConfirmed } = useStakingContract();
   const { data: allowance, refetch: refetchAllowance } = useTokenAllowance(address);
   const { data: realTokenBalance } = useTokenBalance(address);
