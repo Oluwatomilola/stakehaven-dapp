@@ -20,7 +20,7 @@ export default function StakingDashboard() {
   const [tokenBalance, setTokenBalance] = useState("1000.0");
   const [stakePositions, setStakePositions] = useState<StakePosition[]>([]);
 
-  // Mock protocol stats
+  // These are dummy data for the protocol stats
   const protocolStats = {
     totalStaked: "2500000",
     totalUsers: 1247,
@@ -135,7 +135,7 @@ export default function StakingDashboard() {
             </div>
             <div className="text-right">
               <p className="text-sm text-muted-foreground">Network</p>
-              <p className="font-medium">Ethereum Mainnet</p>
+              <p className="font-medium">Sepolia</p>
             </div>
           </div>
         </div>
