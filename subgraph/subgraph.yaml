@@ -1,0 +1,42 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: StakingContract
+    network: mainnet # Change this to your network (e.g., sepolia, polygon, etc.)
+    source:
+      address: "0xf7f38c111d9e6fa0c388edd4409bde988571782a" # Your staking contract address
+      abi: StakingContract
+      startBlock: 0 # Replace with the block number when your contract was deployed
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - StakingPosition
+        - RewardClaim
+        - Withdrawal
+        - EmergencyWithdrawal
+        - ProtocolStats
+        - RewardRateUpdate
+        - DailyProtocolSnapshot
+        - UserDailySnapshot
+      abis:
+        - name: StakingContract
+          file: ./abis/StakingContract.json
+      eventHandlers:
+        - event: Staked(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleStaked
+        - event: Withdrawn(indexed address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleWithdrawn
+        - event: RewardsClaimed(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleRewardsClaimed
+        - event: EmergencyWithdrawn(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleEmergencyWithdrawn
+        - event: RewardRateUpdated(uint256,uint256,uint256,uint256)
+          handler: handleRewardRateUpdated
+        - event: StakingInitialized(indexed address,uint256,uint256)
+          handler: handleStakingInitialized
+      file: ./src/mapping.ts

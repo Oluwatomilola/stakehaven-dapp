@@ -1,0 +1,105 @@
+type User @entity {
+  id: ID! # User address
+  totalStaked: BigInt!
+  totalClaimed: BigInt!
+  totalEmergencyWithdrawn: BigInt!
+  stakingPositions: [StakingPosition!]! @derivedFrom(field: "user")
+  rewardsClaimed: [RewardClaim!]! @derivedFrom(field: "user")
+  emergencyWithdrawals: [EmergencyWithdrawal!]! @derivedFrom(field: "user")
+  withdrawals: [Withdrawal!]! @derivedFrom(field: "user")
+  firstStakeTime: BigInt
+  lastActivityTime: BigInt!
+  isActive: Boolean!
+}
+
+type StakingPosition @entity {
+  id: ID! # Transaction hash + log index
+  user: User!
+  amount: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: String!
+  newTotalStaked: BigInt!
+  currentRewardRate: BigInt!
+  isActive: Boolean!
+}
+
+type RewardClaim @entity {
+  id: ID! # Transaction hash + log index
+  user: User!
+  amount: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: String!
+  newPendingRewards: BigInt!
+  totalStaked: BigInt!
+}
+
+type Withdrawal @entity {
+  id: ID! # Transaction hash + log index
+  user: User!
+  amount: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: String!
+  newTotalStaked: BigInt!
+  currentRewardRate: BigInt!
+  rewardsAccrued: BigInt!
+}
+
+type EmergencyWithdrawal @entity {
+  id: ID! # Transaction hash + log index
+  user: User!
+  amount: BigInt!
+  penalty: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: String!
+  newTotalStaked: BigInt!
+}
+
+type ProtocolStats @entity {
+  id: ID! # "PROTOCOL_STATS"
+  totalStaked: BigInt!
+  totalUsers: BigInt!
+  totalRewardsClaimed: BigInt!
+  totalEmergencyWithdrawals: BigInt!
+  currentRewardRate: BigInt!
+  lastUpdated: BigInt!
+  totalStakingPositions: BigInt!
+  totalWithdrawals: BigInt!
+}
+
+type RewardRateUpdate @entity {
+  id: ID! # Transaction hash + log index
+  oldRate: BigInt!
+  newRate: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: String!
+  totalStaked: BigInt!
+}
+
+type DailyProtocolSnapshot @entity {
+  id: ID! # Day timestamp
+  date: BigInt!
+  totalStaked: BigInt!
+  totalUsers: BigInt!
+  dailyStaked: BigInt!
+  dailyWithdrawn: BigInt!
+  dailyRewardsClaimed: BigInt!
+  dailyEmergencyWithdrawals: BigInt!
+  newUsersCount: BigInt!
+  currentRewardRate: BigInt!
+}
+
+type UserDailySnapshot @entity {
+  id: ID! # User address + day timestamp
+  user: User!
+  date: BigInt!
+  totalStaked: BigInt!
+  pendingRewards: BigInt!
+  dailyStaked: BigInt!
+  dailyWithdrawn: BigInt!
+  dailyRewardsClaimed: BigInt!
+}
