@@ -1,3 +1,5 @@
+## StakeVault
+## Decentralized Staking Protocol
 
 ## What technologies are used for this project?
 
