@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: StakingContract
-    network: celo
+    network: base
     source:
       address: "0xf7f38c111d9e6fa0c388edd4409bde988571782a" # Your staking contract address
       abi: StakingContract
