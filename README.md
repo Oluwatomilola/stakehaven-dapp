@@ -24,13 +24,13 @@ No complicated onboarding. Connect → stake → earn → claim.
 🚀 Status
 
 - Branch: dev‑updates
-- Deployment: (Add your production addresses below after deploy)
+- Deployment: 
 
-Production Contracts (placeholders — update after deploy)
+Production Contracts 
 
-- StakingPool: 0x... (update)
-- RewardToken (ERC‑20): 0x... (update)
-- Network: (e.g. Base Mainnet) Chain ID: ...
+- StakingPool:  0xf7f38c111d9e6fa0c388edd4409bde988571782a
+- RewardToken (ERC‑20):  0x188203c31eE000303e9dFA3EfC9f4671c7375E61
+- Network:  Base Mainnet Chain ID: 42302
 - Compiler: Solidity v0.8.20
 - Optimization: 200 runs
 
