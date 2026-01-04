@@ -195,7 +195,7 @@ Create a .env.local file in /frontend and set the following:
 
 # Contract Addresses (update after deployment)
 NEXT_PUBLIC_STAKING_POOL_ADDRESS=0x...
-NEXT_PUBLIC_REWARD_TOKEN_ADDRESS=0x...
+NEXT_PUBLIC_REWARD_TOKEN_ADDRESS=0xD1b4aEefda0e5A3ba66168BfBc5b898b085179d7
 
 # Network Configuration
 NEXT_PUBLIC_RPC_URL=https://mainnet.base.org
