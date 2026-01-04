@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.12;
+pragma solidity ^0.4.17;
 
 /**
  * @title StakeHavenToken
  * @dev Simple ERC20 token implementation matching the ABI structure
+ * Compatible with older Solidity compiler
  */
 contract StakeHavenToken {
     string public name = "StakeHaven Token";
@@ -19,15 +20,19 @@ contract StakeHavenToken {
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 
-    constructor(uint256 initialSupply, address treasury) public {
+    function () external payable {
+        revert("Contract does not accept direct payments");
+    }
+
+    function StakeHavenToken(uint256 initialSupply, address treasury) public {
         owner = msg.sender;
         totalSupply = initialSupply;
         _balances[treasury] = initialSupply;
-        emit Transfer(address(0), treasury, initialSupply);
+        Transfer(0, treasury, initialSupply);
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "Only owner can call this function");
+        require(msg.sender == owner);
         _;
     }
 
@@ -36,12 +41,12 @@ contract StakeHavenToken {
     }
 
     function transfer(address to, uint256 value) external returns (bool) {
-        require(to != address(0), "Transfer to zero address");
-        require(_balances[msg.sender] >= value, "Insufficient balance");
+        require(to != address(0));
+        require(_balances[msg.sender] >= value);
         
         _balances[msg.sender] -= value;
         _balances[to] += value;
-        emit Transfer(msg.sender, to, value);
+        Transfer(msg.sender, to, value);
         return true;
     }
 
@@ -50,31 +55,31 @@ contract StakeHavenToken {
     }
 
     function approve(address spender, uint256 value) external returns (bool) {
-        require(spender != address(0), "Approve to zero address");
+        require(spender != address(0));
         
         _allowances[msg.sender][spender] = value;
-        emit Approval(msg.sender, spender, value);
+        Approval(msg.sender, spender, value);
         return true;
     }
 
     function transferFrom(address from, address to, uint256 value) external returns (bool) {
-        require(to != address(0), "Transfer to zero address");
-        require(_balances[from] >= value, "Insufficient balance");
-        require(_allowances[from][msg.sender] >= value, "Insufficient allowance");
+        require(to != address(0));
+        require(_balances[from] >= value);
+        require(_allowances[from][msg.sender] >= value);
         
         _balances[from] -= value;
         _balances[to] += value;
         _allowances[from][msg.sender] -= value;
         
-        emit Transfer(from, to, value);
+        Transfer(from, to, value);
         return true;
     }
 
     function _mint(address to, uint256 value) internal {
-        require(to != address(0), "Mint to zero address");
+        require(to != address(0));
         
         totalSupply += value;
         _balances[to] += value;
-        emit Transfer(address(0), to, value);
+        Transfer(0, to, value);
     }
 }
