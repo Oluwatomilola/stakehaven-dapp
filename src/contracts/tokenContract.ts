@@ -1,5 +1,5 @@
 // ERC20 Token contract configuration
-export const TOKEN_CONTRACT_ADDRESS = "0x188203c31eE000303e9dFA3EfC9f4671c7375E61" as const;
+export const TOKEN_CONTRACT_ADDRESS = "0xD1b4aEefda0e5A3ba66168BfBc5b898b085179d7" as const;
 
 export const TOKEN_CONTRACT_ABI = [
   {
